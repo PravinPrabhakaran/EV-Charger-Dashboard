@@ -6,8 +6,6 @@
 .building-layout {
   position: relative;
   border: 2px solid red;
-  display: flex;
-  justify-content: center;
   /* Add other styles like width, height, etc. for the container */
 }
 
@@ -42,8 +40,10 @@
 }
 
 #bay2 {
-  width: 2.65%;
-  height: 6.7%;
+  width: 2.53%;
+  height: 7.10%;
+  top:44.7%;
+  left:41.5%;
   
 }
 
@@ -52,7 +52,7 @@
   width: 2.53%;
   height: 7.10%;
   top:44.7%;
-  left:38.4%;
+  left:45.35%;
 
 }
 
@@ -61,7 +61,7 @@
   width: 2.53%;
   height: 7.10%;
   top:44.7%;
-  left:38.4%;
+  left:48.45%;
 
 }
 
@@ -70,8 +70,8 @@
   position: absolute;
   width: 2.53%;
   height: 7.10%;
-  top:44.7%;
-  left:38.4%;
+  top:44.85%;
+  left:56.4%;
 
 }
 
@@ -79,8 +79,8 @@
   position: absolute;
   width: 2.53%;
   height: 7.10%;
-  top:44.7%;
-  left:38.4%;
+  top:44.85%;
+  left:59.45%;
 
 }
 
