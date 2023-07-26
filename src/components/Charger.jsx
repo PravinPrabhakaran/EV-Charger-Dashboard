@@ -1,16 +1,22 @@
 import React from 'react'
-import Port from './Port'
+
 
 
 // api calls to get info on charger
 
 
-const Charger = () => {
+const Charger = (props) => {
+  console.log(props)
+  console.log("bay" + (props.bayID-1))
   return (
-    <>
-      <Port data=""/>
-      <Port data=""/>
-    </>
+    <div>
+      <div className="chargerContainer" id={"bay" + (props.bayID-1)}>
+        {props.data}
+      </div>
+      <div className="chargerContainer" id={"bay" + props.bayID}>
+        {props.data}
+      </div>
+    </div>
   )
 }
 

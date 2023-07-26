@@ -5,6 +5,9 @@
 /* Container for the building layout with relative positioning */
 .building-layout {
   position: relative;
+  border: 2px solid red;
+  display: flex;
+  justify-content: center;
   /* Add other styles like width, height, etc. for the container */
 }
 
@@ -18,7 +21,7 @@
 }
 
 /* Styling for the overlay containers */
-.overlay-container {
+.chargerContainer {
   position: absolute;
   background-color: green; /* Set this to "transparent" so it's initially invisible */
   border: 2px solid red;
@@ -29,7 +32,7 @@
   /* Set initial positioning and sizing for each rectangle */
 }
 
-#rectangle1 {
+#bay1 {
   position: absolute;
   width: 2.53%;
   height: 7.10%;
@@ -38,10 +41,101 @@
 
 }
 
-#rectangle2 {
+#bay2 {
   width: 2.65%;
   height: 6.7%;
   
+}
+
+#bay3 {
+  position: absolute;
+  width: 2.53%;
+  height: 7.10%;
+  top:44.7%;
+  left:38.4%;
+
+}
+
+#bay4 {
+  position: absolute;
+  width: 2.53%;
+  height: 7.10%;
+  top:44.7%;
+  left:38.4%;
+
+}
+
+
+#bay5 {
+  position: absolute;
+  width: 2.53%;
+  height: 7.10%;
+  top:44.7%;
+  left:38.4%;
+
+}
+
+#bay6 {
+  position: absolute;
+  width: 2.53%;
+  height: 7.10%;
+  top:44.7%;
+  left:38.4%;
+
+}
+
+#bay7 {
+  position: absolute;
+  width: 2.53%;
+  height: 7.10%;
+  top:44.7%;
+  left:38.4%;
+
+}
+
+#bay8 {
+  position: absolute;
+  width: 2.53%;
+  height: 7.10%;
+  top:44.7%;
+  left:38.4%;
+
+}
+
+#bay9 {
+  position: absolute;
+  width: 2.53%;
+  height: 7.10%;
+  top:44.7%;
+  left:38.4%;
+
+}
+
+#bay10 {
+  position: absolute;
+  width: 2.53%;
+  height: 7.10%;
+  top:44.7%;
+  left:38.4%;
+
+}
+
+#bay11 {
+  position: absolute;
+  width: 2.53%;
+  height: 7.10%;
+  top:44.7%;
+  left:38.4%;
+
+}
+
+#bay12 {
+  position: absolute;
+  width: 2.53%;
+  height: 7.10%;
+  top:44.7%;
+  left:38.4%;
+
 }
 
 
