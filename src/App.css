@@ -10,11 +10,13 @@
 }
 
 .pegasusClass {
+  
   border:1px solid black;
   width: 45%;
   height: auto;
   display: block;
   margin-left: auto;
+ 
   margin-right: auto;
 }
 
@@ -139,8 +141,19 @@
 }
 
 
+/* Possible solution to scaling issue */
+@media (max-width: 767px) {
+  /* Add styles that only apply to screens with a maximum width of 767px */
+  .building-layout {
+    border: 2px solid green;
+  }
 
-/* Example: Styling for rectangle1 overlay in specific state */
-#rectangle1.active {
-  background-color: #ff0000; /* Change this color to the desired color for the "active" state */
+  .pegasusClass {
+    width: 100%;
+    border: 3px solid purple;
+  }
+
+  .chargerContainer {
+    border: 2px solid blue;
+  }
 }
