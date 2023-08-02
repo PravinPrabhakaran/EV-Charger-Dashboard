@@ -140,6 +140,15 @@
 
 }
 
+.hiddenInfo {
+  position: absolute;
+  width: 17%;
+  height: 12%;
+  top:27%;
+  left:41.5%;
+  background-color: purple;
+}
+
 
 /* Possible solution to scaling issue */
 @media (max-width: 767px) {

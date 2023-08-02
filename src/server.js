@@ -21,7 +21,7 @@ app.get('/api/chargerState/:chargerID', async (req, res) => {
 
   const { chargerID } = req.params;
   const response = await easee.getChargerState(chargerID) 
-
+  console.log(response)
   //FILTER RESPONSE
   res.json({ data: response });
   });

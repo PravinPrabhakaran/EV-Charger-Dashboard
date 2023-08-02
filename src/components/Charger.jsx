@@ -22,6 +22,12 @@ const getChargerDetails = async (chargerID, setBayData) => {
 }
 
 
+function convertDecimalToTime(decimalHours) {
+  const hours = Math.floor(decimalHours);
+  const minutes = Math.round((decimalHours - hours) * 60);
+  console.log(hours, minutes)
+  return { hours, minutes };
+}
 
 
 const Charger = (props) => {
@@ -53,13 +59,23 @@ const Charger = (props) => {
     inUseIndicator2 = bay2Data["cableLocked"] ? { backgroundColor: 'green' } : { backgroundColor: 'red' };
   }
   
+  var displayExtraInfo = (data) => {
+    console.log(data)
+
+    var sessionDuration = convertDecimalToTime(parseFloat(data["sessionEnergy"])/parseFloat(data["energyPerHour"]))
+
+    var cleanData = {"totalPower": data["totalPower"], 
+                    "sessionEnergy": data["sessionEnergy"],
+                     "sessionDuration": sessionDuration}
+    props.setInfo([false, cleanData])
+  }
   
   return (
     <div>
-      <div className="chargerContainer" id={"bay" + (props.bayID-1)} style={{...inUseIndicator1}}>
+      <div className="chargerContainer" id={"bay" + (props.bayID-1)} style={{...inUseIndicator1}} onClick={() => {displayExtraInfo(bay1Data)}}>
         {props.data}
       </div>
-      <div className="chargerContainer" id={"bay" + props.bayID} style={{...inUseIndicator2}}>
+      <div className="chargerContainer" id={"bay" + props.bayID} style={{...inUseIndicator2}} onClick={() => {displayExtraInfo(bay2Data)}}>
         {props.data}
       </div>
     </div>
