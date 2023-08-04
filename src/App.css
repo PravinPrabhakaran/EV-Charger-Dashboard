@@ -5,139 +5,106 @@
 /* Container for the building layout with relative positioning */
 .building-layout {
   position: relative;
-  border: 2px solid red;
   /* Add other styles like width, height, etc. for the container */
 }
 
 .pegasusClass {
-  
-  border:1px solid black;
   width: 45%;
   height: auto;
   display: block;
   margin-left: auto;
- 
   margin-right: auto;
 }
 
 /* Styling for the overlay containers */
 .chargerContainer {
   position: absolute;
-  background-color: green; /* Set this to "transparent" so it's initially invisible */
-  border: 2px solid red;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%
+  height: 100%;
+  border: 1px solid black;
   /* Set initial positioning and sizing for each rectangle */
 }
 
-#bay1 {
-  position: absolute;
-  width: 2.53%;
-  height: 7.10%;
-  top:44.7%;
-  left:38.4%;
 
+#bay1,
+#bay2,
+#bay3,
+#bay4,
+#bay5,
+#bay6,
+#bay7,
+#bay8,
+#bay9,
+#bay10,
+#bay11,
+#bay12 {
+  position: absolute;
+  width: 2.56%;
+  height: 7.21%;
+}
+
+#bay1 {
+  top:44.65%;
+  left:38.35%;
 }
 
 #bay2 {
-  width: 2.53%;
-  height: 7.10%;
-  top:44.7%;
-  left:41.5%;
-  
+  top:44.65%;
+  left:41.45%;
 }
 
 #bay3 {
-  position: absolute;
-  width: 2.53%;
-  height: 7.10%;
-  top:44.7%;
-  left:45.35%;
-
+  top:44.65%;
+  left:45.285%;
 }
 
 #bay4 {
-  position: absolute;
-  width: 2.53%;
-  height: 7.10%;
-  top:44.7%;
-  left:48.45%;
-
+  top:44.65%;
+  left:48.385%;
 }
 
 
 #bay5 {
-  position: absolute;
-  width: 2.53%;
-  height: 7.10%;
-  top:44.85%;
-  left:56.4%;
-
+  top:44.76%;
+  left:56.355%;
 }
 
 #bay6 {
-  position: absolute;
-  width: 2.53%;
-  height: 7.10%;
-  top:44.85%;
-  left:59.45%;
-
+  top:44.76%;
+  left:59.455%;
 }
 
 #bay7 {
-  position: absolute;
-  width: 2.53%;
-  height: 7.10%;
-  top:56.7%;
+  top:56.5%;
   left:38.4%;
-
 }
 
 #bay8 {
-  position: absolute;
-  width: 2.53%;
-  height: 7.10%;
-  top:56.7%;
-  left:41.6%;
-
+  top:56.5%;
+  left:41.51%;
 }
 
 #bay9 {
-  position: absolute;
-  width: 2.53%;
-  height: 7.10%;
-  top:56.7%;
-  left:45.3%;
-
+  top:56.5%;
+  left:45.345%;
 }
 
 #bay10 {
-  position: absolute;
-  width: 2.53%;
-  height: 7.10%;
-  top:56.7%;
-  left:48.4%;
+  top:56.5%;
+  left:48.445%;
 
 }
 
 #bay11 {
-  position: absolute;
-  width: 2.53%;
-  height: 7.10%;
-  top:56.4%;
-  left:56.4%;
-
+  top:56.33%;
+  left:56.415%;
 }
 
 #bay12 {
-  position: absolute;
-  width: 2.53%;
-  height: 7.10%;
-  top:56.4%;
-  left:59.5%;
-
+  top:56.33%;
+  left:59.515%;
 }
 
 .hiddenInfo {
@@ -149,20 +116,102 @@
   background-color: purple;
 }
 
+.bayLabel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  color: black;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 /* Possible solution to scaling issue */
-@media (max-width: 767px) {
+@media (max-width: 1000px) {
   /* Add styles that only apply to screens with a maximum width of 767px */
-  .building-layout {
-    border: 2px solid green;
-  }
-
   .pegasusClass {
     width: 100%;
-    border: 3px solid purple;
+    height: auto;
   }
 
-  .chargerContainer {
-    border: 2px solid blue;
+
+  #bay1,
+  #bay2,
+  #bay3,
+  #bay4,
+  #bay5,
+  #bay6,
+  #bay7,
+  #bay8,
+  #bay9,
+  #bay10,
+  #bay11,
+  #bay12 {
+    position: absolute;
+    width: 5.7%;
+    height: 7.23%;
+  }
+
+  #bay1 {
+    top:44.61%;
+    left:24.1%;
+  }
+
+  #bay2 {
+    top:44.61%;
+    left: 31.1%;
+  }
+
+  #bay3 {
+    top:44.61%;
+    left:39.53%;  
+  }
+
+  #bay4 {
+    top:44.61%;
+    left:46.4%;
+  }
+
+  #bay5 {
+    top:44.73%;
+    left:64.1%;
+  }
+
+  #bay6 {
+    top:44.73%;
+    left:70.95%;
+  }
+
+  #bay7 {
+    top:56.4%;
+    left:24.1%;
+  }
+
+  #bay8 {
+    top:56.4%;
+    left: 31.1%;
+  }
+
+  #bay9 {
+    top:56.4%;
+    left:39.6%;
+  }
+
+  #bay10 {
+    top:56.4%;
+    left:46.5%;
+  }
+
+  #bay11 {
+    top:56.26%;
+    left:64.23%;
+  }
+
+  #bay12 {
+    top:56.25%;
+    left:71.1%;
   }
 }

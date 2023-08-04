@@ -48,15 +48,15 @@ const Charger = (props) => {
     }
   }, [bay2Data]);
 
-  var inUseIndicator1 ={ backgroundColor: 'yellow' };
-  var inUseIndicator2 =  { backgroundColor: 'yellow' };
+  var inUseIndicator1 ={ backgroundColor: '#f5f507' };
+  var inUseIndicator2 =  { backgroundColor: '#f5f507' };
   
   if (bay1Data) {
-    inUseIndicator1 = bay1Data["cableLocked"] ? { backgroundColor: 'green' } : { backgroundColor: 'red' };
+    inUseIndicator1 = bay1Data["cableLocked"] ? { backgroundColor: '#33ff00' } : { backgroundColor: '#f20202' };
   }
 
   if (bay2Data) {
-    inUseIndicator2 = bay2Data["cableLocked"] ? { backgroundColor: 'green' } : { backgroundColor: 'red' };
+    inUseIndicator2 = bay2Data["cableLocked"] ? { backgroundColor: '#33ff00' } : { backgroundColor: '#f20202' };
   }
   
   var displayExtraInfo = (data) => {
@@ -73,10 +73,10 @@ const Charger = (props) => {
   return (
     <div>
       <div className="chargerContainer" id={"bay" + (props.bayID-1)} style={{...inUseIndicator1}} onClick={() => {displayExtraInfo(bay1Data)}}>
-        {props.data}
+        <h1 className="bayLabel">{props.bayID-1}</h1>
       </div>
       <div className="chargerContainer" id={"bay" + props.bayID} style={{...inUseIndicator2}} onClick={() => {displayExtraInfo(bay2Data)}}>
-        {props.data}
+        <h1 className="bayLabel">{props.bayID}</h1>
       </div>
     </div>
   )
