@@ -17,7 +17,7 @@ function App() {
           <h1>Charger {hiddenInfo[1]["chargerID"]}</h1>
           <p>Total Power : {hiddenInfo[1]["totalPower"]}</p>
           <p>Session Energy : {hiddenInfo[1]["sessionEnergy"]}</p>
-          <p>Session Duration : {hiddenInfo[1]["sessionDuration"]["hours"]} hours {hiddenInfo[1]["sessionDuration"]["minutes"]} minutes</p>
+          <p>Session Duration : {hiddenInfo[1]["sessionDuration"]}</p>
         </div>
     )}
     <Charger bayID={2} chargerIDs={["ECERZU7V", "EC29NMHG"]} setInfo={setHiddenInfo} />

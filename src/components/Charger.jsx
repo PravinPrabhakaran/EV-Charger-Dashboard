@@ -25,8 +25,9 @@ const getChargerDetails = async (chargerID, setBayData) => {
 function convertDecimalToTime(decimalHours) {
   const hours = Math.floor(decimalHours);
   const minutes = Math.round((decimalHours - hours) * 60);
-  console.log(hours, minutes)
-  return { hours, minutes };
+  console.log(hours, minutes, decimalHours)
+  var formatted = hours + " hours " + minutes + " minutes"
+  return formatted;
 }
 
 
@@ -66,11 +67,21 @@ const Charger = (props) => {
     }
 
     console.log(data)
+    var sessionDuration;
+    if (data["energyPerHour"] == "0") {
+      sessionDuration = "N/A"
+    }
+    else {
+      sessionDuration = convertDecimalToTime(parseFloat(data["sessionEnergy"])/parseFloat(data["energyPerHour"]))
+    }
 
-    var sessionDuration = convertDecimalToTime(parseFloat(data["sessionEnergy"])/parseFloat(data["energyPerHour"]))
+    var totalPower = data["totalPower"];
+    if (totalPower == "0") {
+      totalPower = "N/A"
+    }
 
     var cleanData = {"chargerID": chargerID,
-                    "totalPower": data["totalPower"], 
+                    "totalPower": totalPower, 
                     "sessionEnergy": data["sessionEnergy"],
                      "sessionDuration": sessionDuration}
     props.setInfo([false, cleanData])
