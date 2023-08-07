@@ -48,8 +48,8 @@ const Charger = (props) => {
     }
   }, [bay2Data]);
 
-  var inUseIndicator1 ={ backgroundColor: '#f5f507' };
-  var inUseIndicator2 =  { backgroundColor: '#f5f507' };
+  var inUseIndicator1 ={ backgroundColor: 'rgb(255, 230, 3)' };
+  var inUseIndicator2 =  { backgroundColor: 'rgb(255, 230, 3)' };
   
   if (bay1Data) {
     inUseIndicator1 = bay1Data["cableLocked"] ? { backgroundColor: '#33ff00' } : { backgroundColor: '#f20202' };
@@ -59,12 +59,18 @@ const Charger = (props) => {
     inUseIndicator2 = bay2Data["cableLocked"] ? { backgroundColor: '#33ff00' } : { backgroundColor: '#f20202' };
   }
   
-  var displayExtraInfo = (data) => {
+  var displayExtraInfo = (data, chargerID) => {
+    if (data === undefined) {
+      console.log("Loading, please wait before fetching extra details")
+      return
+    }
+
     console.log(data)
 
     var sessionDuration = convertDecimalToTime(parseFloat(data["sessionEnergy"])/parseFloat(data["energyPerHour"]))
 
-    var cleanData = {"totalPower": data["totalPower"], 
+    var cleanData = {"chargerID": chargerID,
+                    "totalPower": data["totalPower"], 
                     "sessionEnergy": data["sessionEnergy"],
                      "sessionDuration": sessionDuration}
     props.setInfo([false, cleanData])
@@ -72,10 +78,10 @@ const Charger = (props) => {
   
   return (
     <div>
-      <div className="chargerContainer" id={"bay" + (props.bayID-1)} style={{...inUseIndicator1}} onClick={() => {displayExtraInfo(bay1Data)}}>
+      <div className="chargerContainer" id={"bay" + (props.bayID-1)} style={{...inUseIndicator1}} onClick={() => {displayExtraInfo(bay1Data, props.bayID-1)}}>
         <h1 className="bayLabel">{props.bayID-1}</h1>
       </div>
-      <div className="chargerContainer" id={"bay" + props.bayID} style={{...inUseIndicator2}} onClick={() => {displayExtraInfo(bay2Data)}}>
+      <div className="chargerContainer" id={"bay" + props.bayID} style={{...inUseIndicator2}} onClick={() => {displayExtraInfo(bay2Data, props.bayID)}}>
         <h1 className="bayLabel">{props.bayID}</h1>
       </div>
     </div>
