@@ -29,7 +29,7 @@ var chargerDetails = [{'chargerID': 'ECERZU7V','inUse':false,'assignedTo':undefi
                     {'chargerID': 'ECERZU7V','inUse':false,'assignedTo':undefined,'state':undefined},
                     {'chargerID': 'ECERZU7V','inUse':false,'assignedTo':undefined,'state':undefined}]
 var allChargersInuse = false
-var user_queue = []
+var user_queue = [['userid', 'timePlaced', 'priority']]
 
 chargerStates()
 // Schedule charger status update and queue processing every 10 minutes
@@ -82,8 +82,33 @@ async function allChargerStatus() {
     allChargersInuse = allTrue;
 }
 
-function processQueue() {
+function processQueue(user_queue) {
+    if (user_queue.length === 1) {
+        let user = user_queue.pop(0)
+        return user[0];
+    }
+    else if (user_queue.length === 0) {
+        return null
+    }
 
+    user_queue.sort((a, b) => {
+        const priorityMap = {
+            'retry': 3,
+            'higher': 2,
+            'normal': 1
+        };
+
+        if (priorityMap[a[2]] > priorityMap[b[2]]) {
+            return -1;
+        } else if (priorityMap[a[2]] < priorityMap[b[2]]) {
+            return 1;
+        } else {
+            return a[1] - b[1];
+        }
+    });
+
+    let user = user_queue.pop(0)
+    return user[0];
 }
 
 function assignCharger(userID, charger) {
