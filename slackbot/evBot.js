@@ -44,12 +44,24 @@ function chargerStates() {
     if (user_queue.length > 0 && !allChargersInuse) {
         for (var charger of chargerDetails) {
             if (!charger['inuse']) {
-                var person = processQueue()
-                assignCharger(person, charger)
+                allocateCharger(charger)
+                continue
             }
-            if (charger['state'] && charger['state'] != 0) {
-                charger['state'] += 1;
+
+
+            if (charger['state']) {
+                if (charger['state'] == -1) {
+                    var originalUser = charger['assignedTo']
+                    allocateCharger(charger)
+                    sendMessage("Sorry, your slot has expired. Please try again - use add retry to get a higher priority",originalUser)
+                }
+                
+                if (charger['state'] != 0){
+                    charger['state'] += 1;
+                }
             }
+            
+            //If state == -1 then pop out of queue
         }
     }
 
@@ -115,6 +127,7 @@ function assignCharger(userID, charger) {
     charger['assignedTo'] = userID;
     charger['inUse'] = true;
     charger['state'] = -2;
+    sendMessage("A slot has opened up, would you like to accept? Y/Yes for Yes, N/No for no",userID)
 }
 
 // Listen for the member_joined_channel event
@@ -126,6 +139,62 @@ slackEvents.on('member_joined_channel', async (event) => {
     }
 });
 
+// Endpoint for handling DM messages from users
+app.post('/queueManagement', async (req, res) => {
+    const payload = req.body;
+
+    if (payload.type === 'message' && payload.channel_type === 'im' && payload.subtype !== 'bot_message') {
+        const userMessage = payload.text.toLowerCase();
+        const userId = payload.user;
+
+        
+        if (userMessage === 'add normal') {
+            // Logic to add user to the queue
+            user_queue.push([userId, new Date(), 'normal'])
+            console.log(`User ${userId} wants to join the queue with normal priority`);
+        }   
+        else if (userMessage === 'add higher') {
+            // Logic to add user to the queue
+            user_queue.push([userId, new Date(), 'higher'])
+            console.log(`User ${userId} wants to join the queue with higher priority`);
+        }
+        else if (userMessage === 'add retry') {
+            // Logic to add user to the queue
+            user_queue.push([userId, new Date(), 'retry'])
+            console.log(`User ${userId} wants to join the queue with retry priority`);
+        }
+        else if (userMessage === 'remove') {
+            // Logic to remove user from the queue
+            console.log(`User ${userId} wants to leave the queue`);
+        } 
+        
+        else if (userMessage === 'yes' || userMessage === 'y') {
+            // Logic to handle user's acceptance of a slot
+            for (charger of chargerDetails) {
+                if (charger['assignedTo'] == userId && charger['state'] < 0) {
+                    charger['state'] = 0
+                    break
+                }
+            }
+            console.log(`User ${userId} has responded ${userMessage}`);
+        }
+
+        else if (userMessage === 'no' || userMessage === 'n') {
+            // Logic to handle user's acceptance of a slot
+            for (charger of chargerDetails) {
+                if (charger['assignedTo'] == userId && charger['state'] < 0) {
+                    allocateCharger(charger)
+                    break
+                }
+            }
+            console.log(`User ${userId} has responded ${userMessage}`);
+        }
+    }
+
+    res.sendStatus(200);
+});
+
+
 function sendMessage(message,chosenChannel=process.env.SLACK_CHANNEL_ID) {
     try {
         const response = slackClient.chat.postMessage({
@@ -136,6 +205,17 @@ function sendMessage(message,chosenChannel=process.env.SLACK_CHANNEL_ID) {
     } catch (error) {
         console.error(`Error sending message: ${error}`);
     }
+}
+
+function allocateCharger(charger) {
+    var person = processQueue()
+    if (person == null) {
+        charger['assignedTo'] = undefined;
+        charger['state'] = undefined;
+        charger['inUse'] = false
+        return
+    }
+    assignCharger(person, charger)
 }
 
 app.listen(port, async ()=> {
