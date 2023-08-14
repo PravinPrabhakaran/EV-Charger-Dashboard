@@ -15,9 +15,9 @@ app.use(express.json());
 const port = process.env.PORT || 3000;
 
 // Initialize Slack API client
-const slackToken = 'YOUR_SLACK_TOKEN';
+const slackToken = process.env.SLACK_TOKEN;
 const slackClient = new WebClient(slackToken);
-const slackSigningSecret = 'YOUR_SIGNING_SECRET'; // Replace with your signing secret
+const slackSigningSecret = process.env.SLACK_SECRET; // Replace with your signing secret
 const slackEvents = createEventAdapter(slackSigningSecret);
 app.use('/slack/events', slackEvents.expressMiddleware());
 
@@ -29,7 +29,7 @@ var chargerDetails = [{'chargerID': 'ECERZU7V','inUse':false,'assignedTo':undefi
                     {'chargerID': 'ECERZU7V','inUse':false,'assignedTo':undefined,'state':undefined},
                     {'chargerID': 'ECERZU7V','inUse':false,'assignedTo':undefined,'state':undefined}]
 var allChargersInuse = false
-var user_queue = [['userid', 'timePlaced', 'priority']]
+var user_queue = []
 
 chargerStates()
 // Schedule charger status update and queue processing every 10 minutes
@@ -54,6 +54,7 @@ function chargerStates() {
                     var originalUser = charger['assignedTo']
                     allocateCharger(charger)
                     sendMessage("Sorry, your slot has expired. Please try again - use add retry to get a higher priority",originalUser)
+                    continue
                 }
                 
                 if (charger['state'] != 0){
@@ -61,7 +62,6 @@ function chargerStates() {
                 }
             }
             
-            //If state == -1 then pop out of queue
         }
     }
 
@@ -94,7 +94,7 @@ async function allChargerStatus() {
     allChargersInuse = allTrue;
 }
 
-function processQueue(user_queue) {
+function processQueue() {
     if (user_queue.length === 1) {
         let user = user_queue.pop(0)
         return user[0];
@@ -139,8 +139,36 @@ slackEvents.on('member_joined_channel', async (event) => {
     }
 });
 
+
+slackEvents.on('message', async (event) => {
+    try {
+        if (event.subtype !== 'bot_message') {
+          const channel = event.channel;
+          const user = event.user;
+          const text = event.text;
+          console.log(`New message from ${user} in channel ${channel}: ${text}`);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    /** 
+    // Check if the event is a message and not a bot message
+    console.log("here")
+    if (event.channel === process.env.SLACK_CHANNEL_ID && event.type === 'message' && event.subtype !== 'bot_message') {
+        // Check if the message is in the desired channel (you can replace 'CHANNEL_ID' with the actual channel ID)
+            // Call the /queueManagement endpoint logic here
+        const response = await axios.post('http://localhost:3000/queueManagement', { type: 'message', ...event });
+        console.log('Response:', response.data);
+        
+    }
+    */
+
+});
+
 // Endpoint for handling DM messages from users
 app.post('/queueManagement', async (req, res) => {
+    console.log(req)
+
     const payload = req.body;
 
     if (payload.type === 'message' && payload.channel_type === 'im' && payload.subtype !== 'bot_message') {
@@ -217,6 +245,27 @@ function allocateCharger(charger) {
     }
     assignCharger(person, charger)
 }
+
+console.log(process.env.SLACK_SECRET)
+
+async function exampleAPICall() {
+    try {
+      const response = await slackClient.chat.postMessage({
+        channel: 'C05MPT0DY74', // Replace with the desired channel ID
+        text: 'Hello, this is a test message!'
+      });
+  
+      if (response.ok) {
+        console.log('Message sent successfully');
+      } else {
+        console.error('Error sending message:', response.error);
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  }
+  
+exampleAPICall();
 
 app.listen(port, async ()=> {
     console.log(`Server is running on port ${port}`)
