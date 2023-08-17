@@ -6,10 +6,9 @@ import React, { useState, useEffect} from 'react';
 const getChargerDetails = async (chargerID, setBayData) => {
   try {
     const response = await fetch(`/api/chargerState/${chargerID}`)
-    
     if (!response.ok) {
-      console.log(response)
-      console.error('Error sending message');
+      setBayData( {"error":true} )
+      return
     }
 
     const data = await response.json();
@@ -49,14 +48,14 @@ const Charger = (props) => {
     }
   }, [bay2Data, props.chargerIDs]);
 
-  var inUseIndicator1 ={ backgroundColor: 'rgb(255, 230, 3)' };
+  var inUseIndicator1 =  { backgroundColor: 'rgb(255, 230, 3)' };
   var inUseIndicator2 =  { backgroundColor: 'rgb(255, 230, 3)' };
   
-  if (bay1Data) {
+  if (bay1Data && !(bay1Data['error'])) {
     inUseIndicator1 = bay1Data["cableLocked"] ? { backgroundColor: '#f20202' } : { backgroundColor: '#33ff00' };
   }
 
-  if (bay2Data) {
+  if (bay2Data && !(bay2Data['error'])) {
     inUseIndicator2 = bay2Data["cableLocked"] ? { backgroundColor: '#f20202' } : { backgroundColor: '#33ff00' };
   }
   
@@ -69,7 +68,7 @@ const Charger = (props) => {
 
     console.log(data)
     var sessionDuration;
-    if (data["energyPerHour"] == "0") {
+    if (data["energyPerHour"] === 0) {
       sessionDuration = "N/A"
     }
     else {
@@ -77,7 +76,7 @@ const Charger = (props) => {
     }
 
     var totalPower = data["totalPower"];
-    if (totalPower == "0") {
+    if (totalPower === 0) {
       totalPower = "N/A"
     }
 

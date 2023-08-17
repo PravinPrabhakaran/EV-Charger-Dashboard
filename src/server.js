@@ -19,9 +19,10 @@ app.get('/api/chargerState/:chargerID', async (req, res) => {
   const { chargerID } = req.params;
   const response = await easee.getChargerState(chargerID) 
   if (response === undefined) {
-    response = {"error":true}
+    let errorMessage = "Server Error"
+    res.status(500).json(( errorMessage ))
+    return
   }
-  //FILTER RESPONSE
   res.json({ data: response });
   });
 
@@ -31,15 +32,10 @@ app.get('/api/chargerState/:chargerID', async (req, res) => {
 const port = 5000;
 app.listen(port, async ()=> {
     console.log(`Server is running on port ${port}`)
+    try {
     await easee.initAccessToken()
+    } catch (error) {
+      console.error(error.message)
+    }
+
 })
-
-
-
-app.get('/api/chat', (req, res) => {
-
-
-
-
-    res.send('Server is reachable!');
-  });
