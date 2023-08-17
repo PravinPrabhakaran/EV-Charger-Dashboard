@@ -18,8 +18,9 @@ app.get('/api/chargerState/:chargerID', async (req, res) => {
   //Log in and set access token to global
   const { chargerID } = req.params;
   const response = await easee.getChargerState(chargerID) 
-  console.log(response)
-  
+  if (response === undefined) {
+    response = {"error":true}
+  }
   //FILTER RESPONSE
   res.json({ data: response });
   });
