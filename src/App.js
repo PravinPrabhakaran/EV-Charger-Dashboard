@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import pegasusHouseImg from './PegasusHouseLayout.png';
 import Charger from './components/Charger.jsx';
 

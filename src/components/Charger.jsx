@@ -41,13 +41,13 @@ const Charger = (props) => {
     if (bay1Data === undefined) {
       getChargerDetails(props.chargerIDs[0], setBay1Data);
     }
-  }, [bay1Data]);
+  }, [bay1Data, props.chargerIDs]);
 
   useEffect(() => {
     if (bay2Data === undefined) {
       getChargerDetails(props.chargerIDs[1], setBay2Data);
     }
-  }, [bay2Data]);
+  }, [bay2Data, props.chargerIDs]);
 
   var inUseIndicator1 ={ backgroundColor: 'rgb(255, 230, 3)' };
   var inUseIndicator2 =  { backgroundColor: 'rgb(255, 230, 3)' };
