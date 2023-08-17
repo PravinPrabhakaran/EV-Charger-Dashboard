@@ -53,11 +53,11 @@ const Charger = (props) => {
   var inUseIndicator2 =  { backgroundColor: 'rgb(255, 230, 3)' };
   
   if (bay1Data) {
-    inUseIndicator1 = bay1Data["cableLocked"] ? { backgroundColor: '#33ff00' } : { backgroundColor: '#f20202' };
+    inUseIndicator1 = bay1Data["cableLocked"] ? { backgroundColor: '#f20202' } : { backgroundColor: '#33ff00' };
   }
 
   if (bay2Data) {
-    inUseIndicator2 = bay2Data["cableLocked"] ? { backgroundColor: '#33ff00' } : { backgroundColor: '#f20202' };
+    inUseIndicator2 = bay2Data["cableLocked"] ? { backgroundColor: '#f20202' } : { backgroundColor: '#33ff00' };
   }
   
   var displayExtraInfo = (data, chargerID) => {
