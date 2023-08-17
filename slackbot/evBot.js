@@ -248,6 +248,21 @@ function allocateCharger(charger) {
 
 console.log(process.env.SLACK_SECRET)
 
+app.post('/slack/events', (req, res) => {
+    const { challenge } = req.body;
+    console.log(req.body)
+    if (challenge) {
+      // Respond to the challenge request with the provided challenge value
+      res.status(200).send({ challenge });
+    } else {
+      // Handle other events or actions from Slack
+      // You can add your event processing logic here
+      res.status(200).send('Event received');
+    }
+  });
+
+
+
 async function exampleAPICall() {
     try {
       const response = await slackClient.chat.postMessage({

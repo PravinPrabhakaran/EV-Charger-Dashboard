@@ -62,6 +62,7 @@ const Charger = (props) => {
   
   var displayExtraInfo = (data, chargerID) => {
     if (data === undefined) {
+      props.setInfo([false, {"chargerID":chargerID, "totalPower":undefined}])
       console.log("Loading, please wait before fetching extra details")
       return
     }
@@ -84,6 +85,7 @@ const Charger = (props) => {
                     "totalPower": totalPower, 
                     "sessionEnergy": data["sessionEnergy"],
                      "sessionDuration": sessionDuration}
+
     props.setInfo([false, cleanData])
   }
   
