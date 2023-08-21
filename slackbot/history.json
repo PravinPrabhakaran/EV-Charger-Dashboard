@@ -1,22 +1,14 @@
 {
-    "C": [
-        "A",
-        "D",
-        "B"
+    "U057XFBG44Q": [
+        "U03KQF6DHNH",
+        "U057A9ARY68"
     ],
-    "A": [
-        "C",
-        "B",
-        "D"
+    "U03KQF6DHNH": [
+        "U057XFBG44Q",
+        "U057A9ARY68"
     ],
-    "D": [
-        "B",
-        "C",
-        "A"
-    ],
-    "B": [
-        "D",
-        "A",
-        "C"
+    "U057A9ARY68": [
+        "U057XFBG44Q",
+        "U03KQF6DHNH"
     ]
 }

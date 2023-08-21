@@ -19,6 +19,7 @@ const slackToken = process.env.SLACK_TOKEN;
 const slackClient = new WebClient(slackToken);
 const slackSigningSecret = process.env.SLACK_SECRET; // Replace with your signing secret
 const slackEvents = createEventAdapter(slackSigningSecret);
+var server;
 app.use('/slack/events', slackEvents.expressMiddleware());
 
 // Maintain a queue of users
@@ -141,6 +142,8 @@ slackEvents.on('member_joined_channel', async (event) => {
 
 
 slackEvents.on('message', async (event) => {
+    console.log("here")
+    console.log("AT SLACK LISTENER")
     try {
         if (event.subtype !== 'bot_message') {
           const channel = event.channel;
@@ -168,6 +171,7 @@ slackEvents.on('message', async (event) => {
 // Endpoint for handling DM messages from users
 app.post('/queueManagement', async (req, res) => {
     console.log(req)
+    console.log("AT QUEUE MANAGEMENT")
 
     const payload = req.body;
 
@@ -246,8 +250,6 @@ function allocateCharger(charger) {
     assignCharger(person, charger)
 }
 
-console.log(process.env.SLACK_SECRET)
-
 async function exampleAPICall() {
     try {
       const response = await slackClient.chat.postMessage({
@@ -264,9 +266,30 @@ async function exampleAPICall() {
       console.error('An error occurred:', error);
     }
   }
+
+
+
+app.post('/slack/events', (req, res) => {
+    let challenge = req.body.challenge;
+    console.log(challenge)
+    console.log("here3")
+    if (challenge) {
+        res.status(200).json({
+            'challenge':challenge
+        });
+    }
+    else {
+        res.status(200).send('Event received')
+    }
+});
   
 exampleAPICall();
 
+
+
 app.listen(port, async ()=> {
     console.log(`Server is running on port ${port}`)
+    server = await slackEvents.start(5000);
+    console.log(`Listening for events on 5000`);
 })
+

@@ -5,6 +5,7 @@
   "private": true,
   "proxy": "http://localhost:5000",
   "dependencies": {
+    "@slack/bolt": "^3.13.3",
     "@slack/events-api": "^3.0.1",
     "@slack/web-api": "^6.9.0",
     "@testing-library/jest-dom": "^5.17.0",
