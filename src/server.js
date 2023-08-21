@@ -8,21 +8,21 @@ import dotenv from 'dotenv';
 dotenv.config({ path: './keys.env' });
 //Makes an instance of the express application
 const app = express();
-
+const easee = new Easee()
 
 //Parses incoming JSON 
 app.use(express.json());
 
 
 app.get('/api/chargerState/:chargerID', async (req, res) => {
-  const easee = new Easee()
   //Log in and set access token to global
-  await easee.initAccessToken()
-
   const { chargerID } = req.params;
   const response = await easee.getChargerState(chargerID) 
-  console.log(response)
-  //FILTER RESPONSE
+  if (response === undefined) {
+    let errorMessage = "Server Error"
+    res.status(500).json(( errorMessage ))
+    return
+  }
   res.json({ data: response });
   });
 
@@ -32,14 +32,10 @@ app.get('/api/chargerState/:chargerID', async (req, res) => {
 const port = 5000;
 app.listen(port, async ()=> {
     console.log(`Server is running on port ${port}`)
+    try {
+    await easee.initAccessToken()
+    } catch (error) {
+      console.error(error.message)
+    }
+
 })
-
-
-
-app.get('/api/chat', (req, res) => {
-
-
-
-
-    res.send('Server is reachable!');
-  });
