@@ -34,14 +34,15 @@ var user_queue = []
 chargerStates()
 // Schedule charger status update and queue processing every 10 minutes
 setInterval(() => {
-    console.log("working")
     chargerStates();
-}, 20000); // 10 minutes in milliseconds
+}, 480000); // 8 minutes in milliseconds
 
 
 function chargerStates() {
+    //Updates status of all chargers
     allChargerStatus()
 
+    //Allocates free chargers and updates state
     for (var charger of chargerDetails) {
         if (!charger['inUse']) {
             allocateCharger(charger)
@@ -49,18 +50,15 @@ function chargerStates() {
         }
         
         if (charger['state']) {
-            console.log("test3")
             if (charger['state'] == -1) {
                 var originalUser = charger['assignedTo']
                 allocateCharger(charger)
-                console.log("test4")
                 sendMessage("Sorry, your slot has expired. Please try again - use add retry to get a higher priority",originalUser)
                 continue
             }
             
             if (charger['state'] != 0){
                 charger['state'] += 1;
-                console.log("test5")
             }
         }
         
@@ -69,6 +67,7 @@ function chargerStates() {
 
 }
 
+//Uses Easee API to obtain charger status
 async function allChargerStatus() {
     const easee = new Easee()
     //Log in and set access token to global
@@ -120,13 +119,16 @@ async function allChargerStatus() {
     }
 
     for (var charger of chargerDetails) {
+        if (charger['state'] != undefined) {
         console.log(`${charger['chargerID']}, inuse ${charger['inUse']}, assignedTo :${charger['assignedTo']}, state: ${charger['state']}`)
+        }
     }
 
 
     allChargersInuse = allTrue;
 }
 
+//Queue processing algorithm using priority and time placed
 function processQueue() {
     if (user_queue.length === 1) {
         let user = user_queue.pop(0)
@@ -156,6 +158,7 @@ function processQueue() {
     return user[0];
 }
 
+//Assign a charger to a user and send an offer for them to accept
 function assignCharger(userID, charger) {
     charger['assignedTo'] = userID;
     charger['inUse'] = true;
@@ -163,28 +166,24 @@ function assignCharger(userID, charger) {
     sendMessage("A slot has opened up, would you like to accept? Y/Yes for Yes, N/No for no",userID)
 }
 
+//Welcome message from bot when members have joined
 app.event('member_joined_channel', async (event) => {
     event = event.body.event
     if (event.channel === process.env.SLACK_CHANNEL_ID && event.channel_type === 'C') {
         const userId = event.user;
-        console.log(userId)
-        const welcomeMessage = 'Welcome to the channel! Here\'s how the queuing system works: ...'; 
-        sendMessage(welcomeMessage, userId)
+        sendMessage('Welcome to the channel! This is a queuing system used to manage charging slots at Pegasus House for CTM. Message me directly with the commands below to interact with the system!\nA List of commands :\nadd normal/higher/retry - allows you to be added to the queue. Select a priority from normal, help and retry based on your need. Please only use retry if you have rejected a slot.\nremove - allows you to remove yourself from the queue or let the system know that you are freeing a charger slot.\nposition - provides your current position in the queue.\nhelp - provides a list of commands and a guide on how the system works.', userId)
     }
 });
 
-
+//Listens to messages and calls queue management function
 app.event('message', async (event) => {
 
     try {
-        
         const channel = event.payload.channel;
         const user = event.payload.user;
         const text = event.payload.text;
 
         queueManagement(event.payload, channel, user, text);
-        console.log(`User queue ${user_queue}`)
-
         console.log(`New message from ${user} in channel ${channel}: ${text}`);
         
       } catch (error) {
@@ -193,19 +192,17 @@ app.event('message', async (event) => {
 });
 
 
-// Endpoint for handling DM messages from users
+// Handles messages from users
 async function queueManagement(payload, channel, user, text) {
-    console.log("AT QUEUE MANAGEMENT")
 
+    //Handles direct messages
     if (payload.type === 'message' && payload.channel_type === 'im') {
         const userMessage = text.toLowerCase();
         const userId = user;
 
-
+        //Handles valid add to queue messages
         if (userMessage === 'add normal' || userMessage === 'add higher' || userMessage === 'add retry') {
             for (var userSlot of user_queue) {
-                console.log(userSlot)
-                console.log(userId)
                 if (userSlot[0] == userId) {
                     sendMessage(`You are already in the queue.`, userId)
                     return
@@ -219,27 +216,39 @@ async function queueManagement(payload, channel, user, text) {
                 }
             }
 
+            var queuePos;
             if (userMessage === 'add normal') {
                 // Logic to add user to the queue
                 user_queue.push([userId, new Date(), 'normal'])
+                queuePos = user_queue.length
                 console.log(`User ${userId} wants to join the queue with normal priority`);
             }   
             else if (userMessage === 'add higher') {
             
             // Logic to add user to the queue
                 user_queue.push([userId, new Date(), 'higher'])
+                queuePos = user_queue.length
                 console.log(`User ${userId} wants to join the queue with higher priority`);
             }
             else if (userMessage === 'add retry') {
                 // Logic to add user to the queue
                 user_queue.push([userId, new Date(), 'retry'])
+                queuePos = user_queue.length
                 console.log(`User ${userId} wants to join the queue with retry priority`);
             }
+
+            sendMessage(`You have successfully been added to the queue at position ${queuePos}.`, userId)
+            
+            if (user_queue.length == 1) {
+                sendMessage(`There is 1 person in the queue. If you no longer require charge, please consider freeing the bay.`)
+            }
+            else if (user_queue.length > 1){
+                sendMessage(`There are ${user_queue.length} people in the queue. If you no longer require charge, please consider freeing the bay.`)
+            }
+            
         }
+        // Handles remove from queue or remove from charger logic
         else if (userMessage === 'remove') {
-            // Logic to remove user from the queue
-
-
             for (let i=0; i<user_queue.length; i++) {
                 if (user_queue[i][0] == userId) {
                     user_queue.splice(i, 1)
@@ -250,22 +259,35 @@ async function queueManagement(payload, channel, user, text) {
 
             for (let i=0; i<chargerDetails.length; i++) {
                 if (chargerDetails[i]['assignedTo'] == userId) {
-                    charger[i]['assignedTo'] = undefined;
-                    charger[i]['state'] = undefined;
-                    charger[i]['inUse'] = false
-                    sendMessage(`You have been removed from the .`, userId)
+                    chargerDetails[i]['assignedTo'] = undefined;
+                    chargerDetails[i]['state'] = undefined;
+                    chargerDetails[i]['inUse'] = false
+                    sendMessage(`You are no longer assigned to charger bay ${chargerDetails[i]['chargerID']}.`, userId)
                     return    
                 }
             }
             
-
-
             sendMessage('You are currently not in the queue', userId)
             console.log(`User ${userId} wants to leave the queue`);
-        } 
+        }
         
+        //Outputs current position in the queue
+        else if (userMessage === 'position') {
+            for (let i=0; i<user_queue.length; i++) {
+                if (user_queue[i][0] == userId) {
+                    sendMessage(`You are at position ${i} in the queue.`, userId)
+                    return    
+                }
+            }
+
+            sendMessage(`You are not in the queue. Please use add normal, add higher or add retry to add yourself to the queue.`, userId)
+        }
+        //Outputs help messages including list of commands
+        else if (userMessage === 'help') {
+            sendMessage(`This bot can be used to queue up for charging slots at Pegasus House. The following commands detail how to use the system!\nA List of commands :\nadd normal/higher/retry - allows you to be added to the queue. Select a priority from normal, help and retry based on your need. Please only use retry if you have rejected a slot.\nremove - allows you to remove yourself from the queue or let the system know that you are freeing a charger slot.\nposition - provides your current position in the queue.\nhelp - provides a list of commands and a guide on how the system works.`, userId)
+        }
+        //Handles accepting a charging slot.
         else if (userMessage === 'yes' || userMessage === 'y') {
-            // Logic to handle user's acceptance of a slot
             console.log(`User ${userId} has responded ${userMessage}`);
             for (var charger of chargerDetails) {
                 if (charger['assignedTo'] == userId && charger['state'] < 0) {
@@ -277,9 +299,8 @@ async function queueManagement(payload, channel, user, text) {
             sendMessage('Sorry, there is no ongoing request to accept.', userId)
 
         }
-
+        //Handles rejecting a charging slot
         else if (userMessage === 'no' || userMessage === 'n') {
-            // Logic to handle user's acceptance of a slot
             console.log(`User ${userId} has responded ${userMessage}`);
             for (var charger of chargerDetails) {
                 if (charger['assignedTo'] == userId && charger['state'] < 0) {
@@ -296,6 +317,7 @@ async function queueManagement(payload, channel, user, text) {
     }
 };
 
+//Sending a message on slack - by default the channel is the channel specified in the environment
 function sendMessage(message,chosenChannel=process.env.SLACK_CHANNEL_ID) {
     try {
         const response = app.client.chat.postMessage({
@@ -308,6 +330,7 @@ function sendMessage(message,chosenChannel=process.env.SLACK_CHANNEL_ID) {
     }
 }
 
+//Allocating a charger to a user.
 function allocateCharger(charger) {
     var person = processQueue()
     if (person == null) {
@@ -319,6 +342,7 @@ function allocateCharger(charger) {
     assignCharger(person, charger)
 }
 
+//Runs the server
 (async () => {
     await app.start(process.env.PORT || 3000);
     console.log('Server is running')
