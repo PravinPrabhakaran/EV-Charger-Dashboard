@@ -27,19 +27,32 @@ The dashboard uses the Easee API to retrieve the status of chargers and some ext
 5. Run the bot using "node evBotBolt.js"
 
 # Important Notes 
-The slack bot requires event subscriptions to be active in the bot settings. It requires the following scopes/permissions :
-app_mentions:read\n
+The slack bot requires event subscriptions to be active in the bot settings. Event subscriptions require a hosted domain which slack can route events to. During development, ngrok was used to temporarily host the local server to the internet. Ideally, a hosted server would be used for this purpose. 
+
+The slack bot also requires the following scopes/permissions which can be set in oauth/permissions page within the slack APP management website :
+
+app_mentions:read
+
 channels:history
+
 channels:join
+
 channels:read
+
 chat:write
+
 groups:history
+
 groups:read
+
 im:history
+
 im:read
+
 im:write
+
 mpim:history
+
 mpim:read
-Event subscriptions require a hosted domain which slack can route events to. During development, ngrok was used to temporarily host the local server to the internet. Ideally, a hosted server would be used for this purpose. 
 
 The charger IDs for the dashboard and slack bot have not been mapped to the correct charger. There was no clear way to identify which charger corresponded to the charger ID given by the API. This should be a very small modification to get the system working, with most cases just reordering the IDs listed.
