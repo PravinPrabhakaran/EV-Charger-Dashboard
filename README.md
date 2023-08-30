@@ -1,70 +1,45 @@
-# Getting Started with Create React App
+# EV - Charger Dashboard & Slack bot
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository contains the dashboard and slackbot to assist in managing EV chargers at Pegasus House.
 
-## Available Scripts
+The dashboard uses the Easee API to retrieve the status of chargers and some extra details. The slack bot provides a way to queue for chargers, also utilising the API to ensure chargers allocated are available. To use the Easee API, make sure your account is linked to the CompareTheMarket EV Charger site. You can use your username and password credentials in the environment variables to allow the application to use the API.
 
-In the project directory, you can run:
+# Running the Dashboard
+1. Open a CMD terminal and type npm install to install the necessary libraries.
+2. Define the necessary environment variables in a file called keys.env inside src :
+    EASEE_USERNAME
+    EASEE_PASSWORD
+    EASEE_SITEID='456745'
+3. Run the server using node server.js
+4. Run the dashboard using npm start
 
-### `npm start`
+# Running the Slack bot
+1. Open a CMD terminal and navigate to the slackbot folder.
+2. Make sure to run npm install to install the relevant libraries.
+3. Define the necessary environment variables in a file called keys.env :
+       EASEE_USERNAME
+       EASEE_PASSWORD
+       EASEE_SIDEID='456745'
+       SLACK_CHANNEL_ID= (ID of EV-Drivers channel)
+       SLACK_TOKEN='xoxb-....' Bot token with appropriate permissions (see below)
+       SLACK_SECRET='' (Can be found when creating an APP on slack API management page)
+5. If using ngrok, make sure it is installed and run it using "ngrok http 3000". Paste the given URL into the slack event subscriptions field on their website and add "/slack/events".
+5. Run the bot using "node evBotBolt.js"
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+# Important Notes 
+The slack bot requires event subscriptions to be active in the bot settings. It requires the following scopes/permissions :
+app_mentions:read
+channels:history
+channels:join
+channels:read
+chat:write
+groups:history
+groups:read
+im:history
+im:read
+im:write
+mpim:history
+mpim:read
+Event subscriptions require a hosted domain which slack can route events to. During development, ngrok was used to temporarily host the local server to the internet. Ideally, a hosted server would be used for this purpose. 
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The charger IDs for the dashboard and slack bot have not been mapped to the correct charger. There was no clear way to identify which charger corresponded to the charger ID given by the API. This should be a very small modification to get the system working, with most cases just reordering the IDs listed.
