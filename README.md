@@ -28,7 +28,7 @@ The dashboard uses the Easee API to retrieve the status of chargers and some ext
 
 # Important Notes 
 The slack bot requires event subscriptions to be active in the bot settings. It requires the following scopes/permissions :
-app_mentions:read
+app_mentions:read/n
 channels:history
 channels:join
 channels:read
